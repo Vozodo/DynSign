@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Dynamic Signature</title>
+    <link rel="stylesheet" href="popup.css">
+    <style>
+        .logo {
+            display: block;
+            margin: 0 auto 10px auto;
+            width: 48px;
+            height: 48px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="popup-container">
+        <div class="popup-header">
+            <img src="../icons/icon.png" alt="DynSign Logo" class="logo">
+            <h1>DynSign</h1>
+        </div>
+
+
+        <div class="last-update">
+            <p>
+                Last update:
+                <br />
+                <strong><span id="lastUpdate">–</span></strong>
+            </p>
+        </div>
+
+        <div class="button-group">
+            <button id="refresh">Refresh Now</button>
+        </div>
+
+        <div class="status" id="status"></div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+
+</html>

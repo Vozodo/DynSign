@@ -1,0 +1,31 @@
+{
+  "manifest_version": 2,
+  "name": "DynSign",
+  "version": "1.0",
+  "description": "Dynamically loads signatures from a URL",
+  "applications": {
+    "gecko": {
+      "id": "dynsign@vozodo.it",
+      "strict_min_version": "128.0"
+    }
+  },
+  "permissions": [
+    "accountsRead",
+    "accountsIdentities",
+    "storage",
+    "alarms",
+    "http://*/",
+    "https://*/"
+  ],
+  "options_ui": {
+    "page": "options/options.html",
+    "open_in_tab": true
+  },
+  "browser_action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": "icons/icon.png"
+  },
+  "background": {
+    "scripts": ["background.js"]
+  }
+}
