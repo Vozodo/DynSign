@@ -5,7 +5,7 @@
   "author": "vozodo",
   "homepage_url": "https://github.com/vozodo/dynsign",
   "description": "Dynamically loads signatures from a URL",
-  "applications": {
+  "browser_specific_settings": {
     "gecko": {
       "id": "dynsign@vozodo.it",
       "strict_min_version": "128.0"
