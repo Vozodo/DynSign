@@ -7,22 +7,22 @@ class DynamicSignatureAPI {
             url = url.replace('{{date}}', Date.now());
             url = url.replace('{{lang}}', encodeURIComponent(navigator.language));
 
-            console.log("Loading signature from URL:", url);
+            debugLog("Loading signature from URL:", url);
 
             const response = await fetch(url);
-            console.log("HTTP status:", response.status);
+            debugLog("HTTP status:", response.status);
 
             if (!response.ok) throw new Error(`HTTP error! status: ${ response.status }`);
             const signatureHTML = await response.text();
 
-            console.log("Signature successfully loaded, length:", signatureHTML.length);
+            debugLog("Signature successfully loaded, length:", signatureHTML.length);
 
             await browser.identities.update(identityId, {
                 signature: signatureHTML,
                 signatureIsPlainText: false
             });
 
-            console.log(`Signature for ${ emailAddress } updated (Identity: ${ identityId })`);
+            debugLog(`Signature for ${ emailAddress } updated (Identity: ${ identityId })`);
 
             // save last update in local storage
             await browser.storage.local.set({
@@ -116,3 +116,10 @@ browser.alarms.onAlarm.addListener((alarm) => {
     }
 });
 
+async function debugLog(...args) {
+    const { debug } = await browser.storage.local.get("debug");
+    if (debug)
+    {
+        console.log(...args);
+    }
+}

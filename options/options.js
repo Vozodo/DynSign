@@ -3,12 +3,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     const defaults = {
         url: "https://vozodo.it/mailsign.php?e={{email}}",
         interval: "15",
+        debug: false
     };
 
     const settings = await browser.storage.local.get(defaults);
 
     document.getElementById("url").value = settings.url;
     document.getElementById("interval").value = settings.interval;
+    document.getElementById("debug").checked = settings.debug;
 });
 
 
@@ -27,7 +29,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     } catch (e)
     {
-        console.error("Fehler beim Laden der Einstellungen:", e);
+        console.error("Error while loading Settings:", e);
     }
 });
 
@@ -35,24 +37,26 @@ document.addEventListener("DOMContentLoaded", async () => {
 document.getElementById("save").addEventListener("click", async () => {
     const url = document.getElementById("url").value.trim();
     const interval = document.getElementById("interval").value;
+    const debug = document.getElementById("debug").checked;
+
 
     try
     {
-        await browser.storage.local.set({ url, interval });
+        await browser.storage.local.set({ url, interval, debug });
 
-        // set alarm new
         if (interval)
         {
             browser.alarms.create("refreshSignature", { periodInMinutes: parseInt(interval) });
         }
 
-        showStatus("Settings saved!");
+        showStatus("Settings saved!", "success");
     } catch (e)
     {
         console.error("Error while saving:", e);
-        showStatus("Error while saving");
+        showStatus("Error while saving", "error");
     }
 });
+
 
 // clean refresh
 document.getElementById("refreshNow").addEventListener("click", () => {
@@ -60,7 +64,7 @@ document.getElementById("refreshNow").addEventListener("click", () => {
         .then(() => showStatus("Signature now refreshed!"))
         .catch(err => {
             console.error("Error during instant refresh:", err);
-            showStatus("Error during refresh");
+            showStatus("Error during refresh", "error");
         });
 });
 
@@ -88,7 +92,7 @@ document.getElementById("testUrl").addEventListener("click", async () => {
             .replace("{{accountName}}", "TestAccount")
             .replace("{{date}}", new Date().toISOString().slice(0, 10));
 
-        console.log("Teste URL:", testUrl);
+        debugLog("Test URL:", testUrl);
         const response = await fetch(testUrl, { method: "GET" });
 
         if (response.ok)
@@ -118,13 +122,6 @@ function isValidHttpUrl(value) {
 }
 
 
-// Helper for status
-function showStatus(msg) {
-    const statusEl = document.getElementById("status");
-    statusEl.textContent = msg;
-    setTimeout(() => { statusEl.textContent = ""; }, 3000);
-}
-
 function showStatus(msg, type = "info") {
     const statusEl = document.getElementById("status");
     statusEl.textContent = msg;
@@ -140,3 +137,13 @@ function showStatus(msg, type = "info") {
         statusEl.textContent = "";
     }, 3000);
 }
+
+
+async function debugLog(...args) {
+    const { debug } = await browser.storage.local.get("debug");
+    if (debug)
+    {
+        console.log(...args);
+    }
+}
+
