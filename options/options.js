@@ -11,6 +11,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("url").value = settings.url;
     document.getElementById("interval").value = settings.interval;
     document.getElementById("debug").checked = settings.debug;
+
+    await renderEmailList();
 });
 
 
@@ -109,6 +111,41 @@ document.getElementById("testUrl").addEventListener("click", async () => {
     }
 });
 
+// Render accounts in options
+async function renderEmailList() {
+    const emailListDiv = document.getElementById("emailList");
+    emailListDiv.innerHTML = ""; // clear first
+
+    const accounts = await loadAccounts();
+    const stored = await browser.storage.local.get("emailSettings");
+    const emailSettings = stored.emailSettings || {};
+
+    accounts.forEach(acc => {
+        const isChecked = emailSettings[acc.email] !== false; // default true
+        const label = document.createElement("label");
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.value = acc.email;
+        checkbox.checked = isChecked;
+        checkbox.addEventListener("change", saveEmailSettings);
+
+        label.appendChild(checkbox);
+        label.appendChild(document.createTextNode(` ${ acc.name } <${ acc.email }>`));
+        emailListDiv.appendChild(label);
+    });
+}
+
+// Save email-specific settings
+async function saveEmailSettings() {
+    const checkboxes = document.querySelectorAll("#emailList input[type=checkbox]");
+    const emailSettings = {};
+    checkboxes.forEach(cb => {
+        emailSettings[cb.value] = cb.checked;
+    });
+    await browser.storage.local.set({ emailSettings });
+    debugLog("Email settings saved:", emailSettings);
+}
+
 // Helper for http check
 function isValidHttpUrl(value) {
     try
@@ -119,6 +156,12 @@ function isValidHttpUrl(value) {
     {
         return false;
     }
+}
+
+// Helper: load all Thunderbird accounts
+async function loadAccounts() {
+    const accounts = await browser.accounts.list();
+    return accounts.flatMap(acc => acc.identities.map(id => ({ name: id.name, email: id.email })));
 }
 
 

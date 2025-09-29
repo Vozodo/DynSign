@@ -38,30 +38,39 @@ class DynamicSignatureAPI {
     }
 
     async init() {
-        const result = await browser.storage.local.get("url");
+        const result = await browser.storage.local.get(["url", "emailSettings"]);
         const urlTemplate = result.url;
+        const emailSettings = result.emailSettings || {};
+
         if (!urlTemplate)
         {
             console.warn("No URL found in storage.local");
             return;
         }
 
-        // all accounts + get identities
         const accounts = await browser.accounts.list();
         for (const acc of accounts)
         {
             for (const identity of acc.identities)
             {
-                try
+                const isEnabled = emailSettings[identity.email] !== false;
+
+                if (isEnabled)
                 {
-                    await this.downloadAndSetSignature(identity.id, identity.email, urlTemplate);
-                } catch (err)
-                {
-                    console.error("Error with Identity:", identity.id, err);
+                    // load signature
+                    try
+                    {
+                        await this.downloadAndSetSignature(identity.id, identity.email, urlTemplate);
+                    } catch (err)
+                    {
+                        debugLog("Error with Identity:", identity.id, err);
+                    }
                 }
             }
         }
     }
+
+
 }
 
 // Instance of API
@@ -117,9 +126,9 @@ browser.alarms.onAlarm.addListener((alarm) => {
 });
 
 async function debugLog(...args) {
-    const { debug } = await browser.storage.local.get("debug");
-    if (debug)
-    {
-        console.log(...args);
-    }
+    //const { debug } = await browser.storage.local.get("debug");
+    //if (debug)
+    //{
+    console.log(...args);
+    //}
 }
