@@ -17,14 +17,26 @@
         <form id="settingsForm">
             <div class="form-group">
                 <label for="url">Signature URL:</label>
-                <input type="text" id="url" placeholder="https://vozodo.it/mailsign.php?e={{email}}">
+                <input type="text" id="url"
+                    placeholder="https://vozodo.it/mailsign.php?e={{email}}&n={{name}}&o={{organization}}">
                 <small>Available placeholders:
-                    <code>{{email}}</code>, <code>{{date}}</code>, <code>{{version}}</code>, <code>{{lang}}</code>
+                    <code>{{email}}</code>, <code>{{name}}</code>, <code>{{organization}}</code>,
+                    <code>{{date}}</code>, <code>{{version}}</code>,
+                    <code>{{lang}}</code>
                 </small>
             </div>
 
             <div class="form-group">
-                <label>Enable signature for these accounts:</label>
+
+                <label>
+                    Enable signature for these accounts:
+                    <span class="info-icon">i
+                        <span class="tooltip">
+                            If it is enabled for an identity, the current signature will be
+                            overwritten!
+                        </span>
+                    </span>
+                </label>
                 <div id="emailList" class="email-list">
                     <!-- Dynamically filled by options.js -->
                 </div>

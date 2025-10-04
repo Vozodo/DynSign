@@ -1,10 +1,12 @@
 class DynamicSignatureAPI {
-    async downloadAndSetSignature(identityId, emailAddress, urlTemplate) {
+    async downloadAndSetSignature(identityId, emailAddress, name, organization, urlTemplate) {
         try
         {
             let url = urlTemplate.replace('{{email}}', encodeURIComponent(emailAddress));
             url = url.replace('{{version}}', encodeURIComponent(browser.runtime.getManifest().version));
             url = url.replace('{{date}}', Date.now());
+            url = url.replace('{{name}}', encodeURIComponent(name));
+            url = url.replace('{{organization}}', encodeURIComponent(organization));
             url = url.replace('{{lang}}', encodeURIComponent(navigator.language));
 
             debugLog("Loading signature from URL:", url);
@@ -49,6 +51,7 @@ class DynamicSignatureAPI {
         }
 
         const accounts = await browser.accounts.list();
+
         for (const acc of accounts)
         {
             for (const identity of acc.identities)
@@ -60,7 +63,7 @@ class DynamicSignatureAPI {
                     // load signature
                     try
                     {
-                        await this.downloadAndSetSignature(identity.id, identity.email, urlTemplate);
+                        await this.downloadAndSetSignature(identity.id, identity.email, identity.name, identity.organization, urlTemplate);
                     } catch (err)
                     {
                         debugLog("Error with Identity:", identity.id, err);
@@ -126,9 +129,9 @@ browser.alarms.onAlarm.addListener((alarm) => {
 });
 
 async function debugLog(...args) {
-    //const { debug } = await browser.storage.local.get("debug");
-    //if (debug)
-    //{
-    console.log(...args);
-    //}
+    const { debug } = await browser.storage.local.get("debug");
+    if (debug)
+    {
+        console.log(...args);
+    }
 }

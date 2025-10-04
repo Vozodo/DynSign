@@ -1,7 +1,7 @@
 // Default options on install
 document.addEventListener("DOMContentLoaded", async () => {
     const defaults = {
-        url: "https://vozodo.it/mailsign.php?e={{email}}",
+        url: "https://vozodo.it/mailsign.php?e={{email}}&n={{name}}&o={{organization}}",
         interval: "15",
         debug: false
     };
@@ -132,6 +132,7 @@ async function renderEmailList() {
         label.appendChild(checkbox);
         label.appendChild(document.createTextNode(` ${ acc.name } <${ acc.email }>`));
         emailListDiv.appendChild(label);
+
     });
 }
 
