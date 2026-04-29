@@ -23,6 +23,7 @@ rsync -av --progress \
   --exclude='build-release.sh' \
   --exclude='.gitignore' \
   --exclude='.gitkeep' \
+  --exclude='*.md' \
   . "$temp_dir" --exclude="$temp_dir"
 
 cd "$temp_dir" || exit 1
