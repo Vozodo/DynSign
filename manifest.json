@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "DynSign",
-  "version": "1.0.1",
+  "version": "1.2.1",
   "author": "vozodo",
   "homepage_url": "https://github.com/vozodo/dynsign",
   "description": "Dynamically loads signatures from a URL",
@@ -20,6 +20,8 @@
   "permissions": [
     "accountsRead",
     "accountsIdentities",
+    "compose",
+    "tabs",
     "storage",
     "alarms",
     "http://*/",

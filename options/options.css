@@ -254,6 +254,32 @@ button:hover {
   opacity: 1;
 }
 
+.support-box {
+  margin-top: 25px;
+  padding: 15px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #f8f9fa, #eef3f8);
+  border: 1px solid #e0e6ed;
+  text-align: center;
+  font-size: 0.9em;
+}
+
+.support-box h2 {
+  font-size: 1em;
+  margin: 0 0 8px 0;
+  color: #4a4a4a;
+}
+
+.support-box a {
+  color: #0078d4;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.support-box a:hover {
+  text-decoration: underline;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
